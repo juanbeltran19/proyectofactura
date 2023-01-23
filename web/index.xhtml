@@ -1,0 +1,140 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        
+            <h:form id="frmFactura">
+                <p:growl id="mensajeGeneral" autoUpdate="true" showDetail="true" sticky="false"/>
+                <p:toolbar>
+                    <f:facet name="left" >
+                        <span title="ADMINISTRACION DE FACTURAS">ADMINISTRACION DE FACTURAS</span>
+                    </f:facet>
+                    <f:facet name="right">
+                        <p:commandButton title="REFRESCAR" ajax="false" actionListener="#" icon="ui-icon-refresh"/>
+                        <p:commandButton title="CREAR" actionListener="#{facturaController.crear()}" icon="ui-icon-document"/>
+                        <p:commandButton title="SALIR" action="salir" icon="ui-icon-close"/>
+                    </f:facet>
+                </p:toolbar>        
+        
+        <p:dataTable id="tablaRegistros" var="obj" value="#{facturaController.listarFacturas()}" paginator="true" rows="30"  rowKey="#{obj.numeroFactura}" filteredValue="" widgetVar="tablaWidget"
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             rowsPerPageTemplate="5,10,30,50,100">
+                    <p:column headerText="IdFactura">
+                        <h:outputText value="#{obj.idFactura}" />
+                    </p:column>            
+                    <p:column headerText="Fecha">
+                        <h:outputText value="#{obj.fecha}" />
+                    </p:column>
+            <p:column filterBy="#{obj.numeroFactura}" headerText="Numero Factura">
+                <h:outputText  value="#{obj.numeroFactura}" />
+                    </p:column>
+                    <p:column headerText="NumeroDocuentoCliente">
+                        <h:outputText value="#{obj.documentoCliente}"/>
+                    </p:column>
+                    <p:column headerText="NombreCliente">
+                        <h:outputText value="#{obj.nombreCliente}"/>
+                    </p:column>
+                    <p:column headerText="Subtotal">
+                        <h:outputText value="#{obj.subTotal}" />
+                    </p:column>
+                    <p:column headerText="Descuento">
+                        <h:outputText value="#{obj.descuento}" />
+                    </p:column>            
+                    <p:column headerText="Iva">
+                        <h:outputText value="#{obj.iva}" />
+                    </p:column>            
+                    <p:column headerText="TotalDescuento">
+                        <h:outputText value="#{obj.totalDescuento}" />
+                    </p:column>            
+                    <p:column headerText="TotalImpuesto">
+                        <h:outputText value="#{obj.totalImpuesto}" />
+                    </p:column>            
+                    <p:column headerText="Total">
+                        <h:outputText value="#{obj.total}" />
+                    </p:column>            
+                    <p:column style=" width: 135px; text-align: center;">
+                        <f:facet name="header">
+                            <h:outputText value="Acciones"/>
+                        </f:facet>    
+                        <p:commandButton title="Ver" actionListener="#" icon="ui-icon-search"/>
+                        <p:commandButton title="Editar" actionListener="#" icon="ui-icon-pencil"/>
+                        <p:commandButton title="Borrar" action="#{facturaController.eliminarFactura(obj.numeroFactura)}" icon="ui-icon-trash">
+                            <p:confirm header="Confirmación" message="Está seguro que desea eliminar?" icon="ui-icon-alert" />
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+                
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                    <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" style="left:25%"/>
+                    <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" style="left:25%"/>
+                </p:confirmDialog>
+            </h:form>  
+        
+            <p:dialog header="CREACION DE FACTURA" widgetVar="dialogoCrear" appendTo="@(body)" modal="true" >
+                <h:form id="frmCrear" >
+                    
+                    <h:panelGrid id="panelCrear" columns="2" width="400">
+                        
+                        <h:inputHidden id="id" value="#" />
+                        <h:column/><h:column/><h:column/>                      
+
+                        <p:outputLabel value="IdFactura" for="idfactura"/>
+                        <p:inputText id="idfactura" label="IdFactura" value="#{facturaController.objeto.idFactura}" maxlength="16" size="16" required="true">
+                        </p:inputText>
+
+                        <p:outputLabel value="NumeroFactura" for="numerofactura"/>
+                        <p:inputText id="numerofactura" label="NumeroFactura" value="#{facturaController.objeto.numeroFactura}" maxlength="32" size="32" required="true">
+                        </p:inputText>
+                        
+                        <p:outputLabel value="DocumentoCliente" for="documentocliente"/>
+                        <p:inputText id="documentocliente" label="DocumentoCliente" value="#{facturaController.objeto.documentoCliente}" maxlength="45" size="40">
+                        </p:inputText>
+                        
+                        <p:outputLabel value="NombreCliente" for="nombrecliente"/>
+                        <p:inputText id="nombrecliente" label="NombreCliente" value="#{facturaController.objeto.nombreCliente}" maxlength="16" size="16" required="true">
+                        </p:inputText>                        
+                        
+                        <p:outputLabel value="Subtotal" for="subtotal"/>
+                        <p:inputText id="subtotal" label="Subtotal" value="#{facturaController.objeto.subTotal}" maxlength="16" size="16" required="true">
+                        </p:inputText>
+                        
+                        <p:outputLabel value="Descuento" for="descuento"/>
+                        <p:inputText id="descuento" label="Descuento" value="#{facturaController.objeto.descuento}" maxlength="16" size="16" required="true">
+                        </p:inputText>
+
+                        <p:outputLabel value="Iva" for="iva"/>
+                        <p:inputText id="iva" label="Iva" value="#{facturaController.objeto.iva}" maxlength="16" size="16" required="true">
+                        </p:inputText>
+
+                        <p:outputLabel value="TotalDescuento" for="totaldescuento"/>
+                        <p:inputText id="totaldescuento" label="TotalDescuento" value="#{facturaController.objeto.totalDescuento}" maxlength="16" size="16" required="true">
+                        </p:inputText>
+
+                        <p:outputLabel value="TotalImpuesto" for="totalimpuesto"/>
+                        <p:inputText id="totalimpuesto" label="TotalImpuesto" value="#{facturaController.objeto.totalImpuesto}" maxlength="16" size="16" required="true">
+                        </p:inputText>
+
+                        <p:outputLabel value="Total" for="total"/>
+                        <p:inputText id="total" label="Total" value="#{facturaController.objeto.total}" maxlength="16" size="16" required="true">
+                        </p:inputText>                        
+                        
+                        <h:panelGroup></h:panelGroup>
+                        <h:panelGroup></h:panelGroup>
+
+                        <p:commandButton value="Guardar" type="button" validateClient="true" onclick="guardarRemote()" style="left: 30%;"/>
+                        <p:remoteCommand name="guardarRemote" update="panelCrear" action ="#{facturaController.insertarFactura(facturaController.objeto)}" />
+                        
+                    </h:panelGrid>
+                </h:form>
+            </p:dialog>                    
+        
+    </h:body>
+</html>
+
